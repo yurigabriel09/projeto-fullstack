@@ -8,9 +8,22 @@ def init_routes(app):
             "mensagem": "API - OK; Docker - Up",
         }), 200)
     
+
+    # @app.route('/users', methods=['GET'])
+    # def get_users():
+    #     pass
+    
     @app.route('/user', methods=['POST'])
     def register_user():
         return UserController.register_user()
     
+    # @app.route('/activate', methods=['POST'])
+    # def activate_user():
+    #     {
+    #         'email': dkmnlfksd
+    #         'senha': dfjnokdf
+    #         'codigo': 1234
+    #     }
+        
     
 

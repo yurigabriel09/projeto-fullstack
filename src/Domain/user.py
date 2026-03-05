@@ -1,12 +1,21 @@
 class UserDomain:
-    def __init__(self, id, name, email, password):
+    def __init__(self, id, name, email, senha, cnpj, celular, status):
         self.id = id
         self.name = name
-        self.email = email        
+        self.email = email
+        self.cnpj = cnpj
+        self.celular = celular
+        self.senha = senha
+        self.status = status
     
-    def to_dict(self):
+    def to_dict(id, name, email, senha, cnpj, celular, status):
+
         return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email,            
+            "id": id,
+            "name": name,
+            "email": email,  
+            "senha": senha,
+            "cnpj": cnpj,
+            "celular": celular,
+            "status": status          
         }

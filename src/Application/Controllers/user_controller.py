@@ -5,15 +5,19 @@ class UserController:
     @staticmethod
     def register_user():
         data = request.get_json()
+
         name = data.get('name')
         email = data.get('email')
-        password = data.get('password')
+        senha = data.get('senha')
+        cnpj = data.get('cnpj')
+        celular = data.get('celular')
 
-        if not name or not email or not password:
+        if not name or not email or not senha:
             return make_response(jsonify({"erro": "Missing required fields"}), 400)
 
-        user = UserService.create_user(name, email, password)
+        user = UserService.create_user(name, email, senha, cnpj, celular)
+
         return make_response(jsonify({
             "mensagem": "User salvo com sucesso",
-            "usuarios": user.to_dict()
+            "usuario": user
         }), 200)
