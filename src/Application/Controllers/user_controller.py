@@ -1,6 +1,7 @@
 from flask import request, jsonify, make_response
 from src.Application.Service.user_service import UserService
 import bcrypt
+import random
 
 class UserController:
     @staticmethod
@@ -12,12 +13,14 @@ class UserController:
         senha = data.get('senha')
         cnpj = data.get('cnpj')
         celular = data.get('celular')
+
         hash_senha = UserController.cryprit_senha(senha)
+        codigo = UserController.codigo()
 
         if not name or not email or not senha:
             return make_response(jsonify({"erro": "Missing required fields"}), 400)
 
-        user = UserService.create_user(name, email, hash_senha, cnpj, celular)
+        user = UserService.create_user(name, email, hash_senha, cnpj, celular, codigo)
 
         return make_response(jsonify({
             "mensagem": "User salvo com sucesso",
@@ -26,3 +29,9 @@ class UserController:
 
     def cryprit_senha(senha):
         return bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
+    
+    def create_code():
+        codigo = random.randint(1000, 9999)
+
+        return codigo
+    

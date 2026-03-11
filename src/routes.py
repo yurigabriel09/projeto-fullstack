@@ -17,13 +17,9 @@ def init_routes(app):
     def register_user():
         return UserController.register_user()
     
-    # @app.route('/activate', methods=['POST'])
-    # def activate_user():
-    #     {
-    #         'email': dkmnlfksd
-    #         'senha': dfjnokdf
-    #         'codigo': 1234
-    #     }
+    @app.route('/activate', methods=['POST'])
+    def activate_user():
+        return UserController.activate()
         
     
 
