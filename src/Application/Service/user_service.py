@@ -13,4 +13,4 @@ class UserService:
         db.session.add(user)
         db.session.commit()   
 
-        return UserDomain.to_dict(user.id, user.name, user.email, user.cnpj, user.celular, user.status)
+        return UserDomain.to_dict(user.name, user.email, user.cnpj, user.celular, user.status, user.codigo)

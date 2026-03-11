@@ -15,7 +15,7 @@ class UserController:
         celular = data.get('celular')
 
         hash_senha = UserController.cryprit_senha(senha)
-        codigo = UserController.codigo()
+        codigo = UserController.create_code()
 
         if not name or not email or not senha:
             return make_response(jsonify({"erro": "Missing required fields"}), 400)
