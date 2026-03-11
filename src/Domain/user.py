@@ -13,8 +13,7 @@ class UserDomain:
         return {
             "id": id,
             "name": name,
-            "email": email,  
-            "senha": senha,
+            "email": email,
             "cnpj": cnpj,
             "celular": celular,
             "status": status          
