@@ -4,15 +4,17 @@ from twilio.rest import Client
 
 class Twilio:
 
-    account_sid = 'AC8b21e5601f64f5cccbd1589d46c25ea9'
-    auth_token = '7812014608a2e41315b6856a05950ce5'
-    client = Client(account_sid, auth_token)
+    @staticmethod
+    def send_code(codigo):
+        account_sid = 'AC8b21e5601f64f5cccbd1589d46c25ea9'
+        auth_token = 'd166f486520c3f839092d76534093e90'
+        client = Client(account_sid, auth_token)
 
-    message = client.messages.create(
-    from_='whatsapp:+14155238886',
-    content_sid='HXb5b62575e6e4ff6129ad7c8efe1f983e',
-    content_variables='{"1":"409173"}',
-    to='whatsapp:+5511993081879'
-    )
+        message = client.messages.create(
+        from_='whatsapp:+14155238886',
+        content_sid='HX229f5a04fd0510ce1b071852155d3e75',
+        content_variables=f'{{"1":"{codigo}"}}',
+        to='whatsapp:+5511993081879'
+        )
 
-    print(message.sid)
+        print(message.sid)
