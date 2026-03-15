@@ -27,9 +27,34 @@ class UserController:
             "usuario": user
         }), 200)
 
+
     def crypt_senha(senha):
         return bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
     
+
     def create_code():
         return random.randint(1000, 9999)
     
+
+    @staticmethod
+    def activate_user():
+        data = request.get_json()
+
+        email = data.get('email')
+        senha = data.get('senha')
+        codigo = data.get('codigo')
+
+        # Validação dos campos obrigatórios
+        if not email or not senha or not codigo:
+            return make_response(jsonify({"erro": "Missing required fields: email, senha e codigo são obrigatórios"}), 400)
+
+        # Chama o service para validar e ativar o usuário
+        resultado = UserService.activate_user(email, senha, codigo)
+
+        if not resultado["success"]:
+            return make_response(jsonify({"erro": resultado["message"]}), resultado["status_code"])
+
+        return make_response(jsonify({
+            "mensagem": "Usuário ativado com sucesso",
+            "usuario": resultado["usuario"]
+        }), 200)

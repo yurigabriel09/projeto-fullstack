@@ -17,5 +17,5 @@ class UserDomain:
             "cnpj": cnpj,
             "celular": celular,
             "status": status,
-            "codigo": codigo      
+            "codigo": codigo
         }
