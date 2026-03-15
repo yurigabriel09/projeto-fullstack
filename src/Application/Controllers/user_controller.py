@@ -14,7 +14,7 @@ class UserController:
         cnpj = data.get('cnpj')
         celular = data.get('celular')
 
-        hash_senha = UserController.cryprit_senha(senha)
+        hash_senha = UserController.crypt_senha(senha)
         codigo = UserController.create_code()
 
         if not name or not email or not senha:
@@ -27,11 +27,9 @@ class UserController:
             "usuario": user
         }), 200)
 
-    def cryprit_senha(senha):
+    def crypt_senha(senha):
         return bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
     
     def create_code():
-        codigo = random.randint(1000, 9999)
-
-        return codigo
+        return random.randint(1000, 9999)
     

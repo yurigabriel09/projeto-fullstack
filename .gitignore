@@ -17,3 +17,6 @@ env/
 
 # OS
 .DS_Store
+
+# Arquivo de teste
+test.py
