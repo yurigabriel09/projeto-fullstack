@@ -9,7 +9,7 @@ class UserDomain:
         self.status = status
         self.codigo = codigo
     
-    def to_dict(name, email, cnpj, celular, status, codigo):
+    def to_dict_create(name, email, cnpj, celular, status, codigo):
 
         return {
             "name": name,
@@ -18,4 +18,19 @@ class UserDomain:
             "celular": celular,
             "status": status,
             "codigo": codigo
+        }
+    
+    def to_dict_activate(name, email, status):
+
+        return {
+            "name": name,
+            "email": email,
+            "status": status
+        }
+    
+    def to_dict_login(name, email):
+
+        return {
+            "name": name,
+            "email": email
         }

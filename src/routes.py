@@ -17,3 +17,7 @@ def init_routes(app):
     def activate_user():
         return UserController.activate_user()
     
+    @app.route('/login', methods=['POST'])
+    def login():
+        return UserController.login()
+    

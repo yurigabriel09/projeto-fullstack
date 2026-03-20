@@ -2,7 +2,11 @@ from src.Domain.user import UserDomain
 from src.Infrastructure.Model.user import User
 from src.Infrastructure.http.whats_app import Twilio
 from src.config.data_base import db 
+from flask import current_app
 import bcrypt
+import jwt
+import datetime
+
 
 class UserService:
     @staticmethod
@@ -17,7 +21,7 @@ class UserService:
 
         Twilio.send_code(codigo)
 
-        return UserDomain.to_dict(user.name, user.email, user.cnpj, user.celular, user.status, user.codigo)
+        return UserDomain.to_dict_create(user.name, user.email, user.cnpj, user.celular, user.status, user.codigo)
 
 
     @staticmethod
@@ -27,20 +31,36 @@ class UserService:
 
         # Verifica se o usuário existe
         if not user:
-            return {"success": False, "message": "Usuário não encontrado. Verifique o e-mail e tente novamente.", "status_code": 404}
+            return {
+                "success": False, 
+                "erro": "Usuário não encontrado. Verifique o e-mail e tente novamente.", 
+                "status_code": 404
+                }
 
         # Verifica se a senha está correta
         senha_valida = bcrypt.checkpw(senha.encode('utf-8'), user.senha)
         if not senha_valida:
-            return {"success": False, "message": "Senha inválida", "status_code": 401}
+            return {
+                "success": False, 
+                "erro": "Senha inválida", 
+                "status_code": 401
+                }
 
         # Verifica se o código de ativação está correto
         if str(user.codigo) != str(codigo):
-            return {"success": False, "message": "Código de ativação inválido", "status_code": 400}
+            return {
+                "success": False, 
+                "erro": "Código de ativação inválido", 
+                "status_code": 400
+                }
 
         # Verifica se o usuário já está ativo
         if user.status == 1:
-            return {"success": False, "message": "Usuário já está ativo", "status_code": 409}
+            return {
+                "success": False, 
+                "erro": "Usuário já está ativo", 
+                "status_code": 409
+                }
 
         # Ativa o usuário (status 0 -> 1)
         user.status = 1
@@ -48,6 +68,53 @@ class UserService:
 
         return {
             "success": True,
-            "message": "Usuário ativado com sucesso",
-            "usuario": UserDomain.to_dict(user.name, user.email, user.cnpj, user.celular, user.status, user.codigo)
+            "mensagem": "Usuário ativado com sucesso",
+            "usuario": UserDomain.to_dict_activate(user.name, user.email, user.status)
+        }
+    
+
+    @staticmethod
+    def user_login(email, senha):
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return {
+                "success": False,
+                "erro": "Usuário não encontrado. Verifique o e-mail e tente novamente",
+                "status_code": 404
+            }
+        
+        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), user.senha)
+        if not senha_valida:
+            return {
+                "success": False,
+                "erro": "Senha inválida!",
+                "status_code": 401
+            }
+        
+        if user.status != 1:
+            return {
+                "success": False,
+                "erro": "Usuário não está ativo! Acesse a rota de login e faça a ativação do Seller.",
+                "status_code": 403
+            }
+        
+        SECRET_KEY = current_app.config["SECRET_KEY"]
+
+        token = jwt.encode(
+                {
+                    "id": user.id,
+                    "email": user.email,
+                    "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+                },
+                SECRET_KEY,
+                algorithm="HS256"
+            )
+
+        return {
+            "success": True,
+            "token": token,
+            "mensagem": "Usuário logado com sucesso!",
+            "usuario": UserDomain.to_dict_login(user.name, user.email)
         }

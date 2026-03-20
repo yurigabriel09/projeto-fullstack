@@ -44,17 +44,37 @@ class UserController:
         senha = data.get('senha')
         codigo = data.get('codigo')
 
-        # Validação dos campos obrigatórios
         if not email or not senha or not codigo:
             return make_response(jsonify({"erro": "Missing required fields: email, senha e codigo são obrigatórios"}), 400)
 
-        # Chama o service para validar e ativar o usuário
         resultado = UserService.activate_user(email, senha, codigo)
 
         if not resultado["success"]:
-            return make_response(jsonify({"erro": resultado["message"]}), resultado["status_code"])
+            return make_response(jsonify({"erro": resultado["erro"]}), resultado["status_code"])
 
         return make_response(jsonify({
             "mensagem": "Usuário ativado com sucesso",
             "usuario": resultado["usuario"]
+        }), 200)
+    
+
+    @staticmethod
+    def login():
+        data = request.get_json()
+
+        email = data.get('email')
+        senha = data.get('senha')
+
+        if not email or not senha:
+            return make_response(jsonify({"erro": "Os campos de e-mail e senha são obrigatórios."}), 400)
+        
+        resultado = UserService.user_login(email, senha)
+
+        if not resultado["success"]:
+            return make_response(jsonify({"erro": resultado["erro"]}), resultado['status_code'])
+
+        return make_response(jsonify({
+            "mensagem": resultado['mensagem'],
+            "usuario": resultado['usuario'],
+            "token": resultado['token']
         }), 200)
