@@ -1,7 +1,7 @@
 class UserDomain:
-    def __init__(self, id, name, email, senha, cnpj, celular, status, codigo):
+    def __init__(self, id, nome, email, senha, cnpj, celular, status, codigo):
         self.id = id
-        self.name = name
+        self.nome = nome
         self.email = email
         self.cnpj = cnpj
         self.celular = celular
@@ -9,10 +9,10 @@ class UserDomain:
         self.status = status
         self.codigo = codigo
     
-    def to_dict_create(name, email, cnpj, celular, status, codigo):
+    def to_dict_create(nome, email, cnpj, celular, status, codigo):
 
         return {
-            "name": name,
+            "nome": nome,
             "email": email,
             "cnpj": cnpj,
             "celular": celular,
@@ -20,17 +20,17 @@ class UserDomain:
             "codigo": codigo
         }
     
-    def to_dict_activate(name, email, status):
+    def to_dict_activate(nome, email, status):
 
         return {
-            "name": name,
+            "nome": nome,
             "email": email,
             "status": status
         }
     
-    def to_dict_login(name, email):
+    def to_dict_login(nome, email):
 
         return {
-            "name": name,
+            "nome": nome,
             "email": email
         }

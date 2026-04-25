@@ -21,3 +21,7 @@ def init_routes(app):
     def login():
         return UserController.login()
     
+    @app.route('/editseller/me', methods=['PUT'])
+    @token_required
+    def edit_seller():
+        return UserController.edit_seller()

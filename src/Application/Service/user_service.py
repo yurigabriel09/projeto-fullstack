@@ -10,8 +10,8 @@ import datetime
 
 class UserService:
     @staticmethod
-    def create_user(name, email, senha, cnpj, celular, codigo):
-        user = User(name=name, email=email, senha=senha, cnpj=cnpj, celular=celular, status=0, codigo=codigo)
+    def create_user(nome, email, senha, cnpj, celular, codigo):
+        user = User(nome=nome, email=email, senha=senha, cnpj=cnpj, celular=celular, status=0, codigo=codigo)
 
         for key, value in user.__dict__.items():
             print(key, value)
@@ -21,15 +21,13 @@ class UserService:
 
         Twilio.send_code(codigo)
 
-        return UserDomain.to_dict_create(user.name, user.email, user.cnpj, user.celular, user.status, user.codigo)
+        return UserDomain.to_dict_create(user.nome, user.email, user.cnpj, user.celular, user.status, user.codigo)
 
 
     @staticmethod
     def activate_user(email, senha, codigo):
-        # Busca o usuário no banco pelo e-mail
         user = User.query.filter_by(email=email).first()
 
-        # Verifica se o usuário existe
         if not user:
             return {
                 "success": False, 
@@ -37,7 +35,6 @@ class UserService:
                 "status_code": 404
                 }
 
-        # Verifica se a senha está correta
         senha_valida = bcrypt.checkpw(senha.encode('utf-8'), user.senha)
         if not senha_valida:
             return {
@@ -46,7 +43,6 @@ class UserService:
                 "status_code": 401
                 }
 
-        # Verifica se o código de ativação está correto
         if str(user.codigo) != str(codigo):
             return {
                 "success": False, 
@@ -54,7 +50,6 @@ class UserService:
                 "status_code": 400
                 }
 
-        # Verifica se o usuário já está ativo
         if user.status == 1:
             return {
                 "success": False, 
@@ -62,14 +57,13 @@ class UserService:
                 "status_code": 409
                 }
 
-        # Ativa o usuário (status 0 -> 1)
         user.status = 1
         db.session.commit()
 
         return {
             "success": True,
             "mensagem": "Usuário ativado com sucesso",
-            "usuario": UserDomain.to_dict_activate(user.name, user.email, user.status)
+            "usuario": UserDomain.to_dict_activate(user.nome, user.email, user.status)
         }
     
 
@@ -116,5 +110,33 @@ class UserService:
             "success": True,
             "token": token,
             "mensagem": "Usuário logado com sucesso!",
-            "usuario": UserDomain.to_dict_login(user.name, user.email)
+            "usuario": UserDomain.to_dict_login(user.nome, user.email)
+        }
+    
+
+    @staticmethod
+    def edit_seller(id, dados):
+
+        user = User.query.filter_by(id=id).first()
+
+        if not user:
+            return {
+                "success": False,
+                "erro": "Usuário não encontrado.",
+                "status_code": 404
+            }
+        
+        for campo, valor in dados.items():
+            if campo == "senha":
+                valor = bcrypt.hashpw(valor.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+            setattr(user, campo, valor)
+
+        db.session.commit()
+
+
+        return {
+            "success": True,
+            "mensagem": "Usuário alterado com sucesso!",
+            "usuario": UserDomain.to_dict_login(user.nome, user.email)
         }
