@@ -27,10 +27,9 @@ class UserController:
             "usuario": user
         }), 200)
 
-
-    def crypt_senha(senha):
-        return bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
     
+    def crypt_senha(senha):
+        return bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     def create_code():
         return random.randint(1000, 9999)

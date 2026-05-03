@@ -34,8 +34,9 @@ class UserService:
                 "erro": "Usuário não encontrado. Verifique o e-mail e tente novamente.", 
                 "status_code": 404
                 }
-
-        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), user.senha)
+        
+        senha_armazenada = user.senha.encode('utf-8') if isinstance(user.senha, str) else user.senha
+        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), senha_armazenada)
         if not senha_valida:
             return {
                 "success": False, 
@@ -79,7 +80,8 @@ class UserService:
                 "status_code": 404
             }
         
-        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), user.senha)
+        senha_armazenada = user.senha.encode('utf-8') if isinstance(user.senha, str) else user.senha
+        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), senha_armazenada)
         if not senha_valida:
             return {
                 "success": False,
