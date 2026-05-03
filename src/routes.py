@@ -1,4 +1,5 @@
 from src.Application.Controllers.user_controller import UserController
+from src.Infrastructure.Middleware.middleware import token_required
 from flask import jsonify, make_response
 
 def init_routes(app):    

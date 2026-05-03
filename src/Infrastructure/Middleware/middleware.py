@@ -2,11 +2,12 @@ from functools import wraps
 from flask import request, jsonify, current_app
 import jwt
 
-SECRET_KEY = current_app.config["SECRET_KEY"]
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        SECRET_KEY = current_app.config["SECRET_KEY"]
+        
         token = None
 
         if 'Authorization' in request.headers:

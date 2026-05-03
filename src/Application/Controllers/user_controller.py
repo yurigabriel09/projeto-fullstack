@@ -96,13 +96,12 @@ class UserController:
             return {"message": "Nenhum campo válido para atualização"}, 400
 
 
-        resultado = UserService.edit_seller(user_id, data)
+        resultado = UserService.edit_seller(user_id, dados_filtrados)
 
         if not resultado["success"]:
             return make_response(jsonify({"erro": resultado["erro"]}), resultado['status_code'])
         
         return make_response(jsonify({
             "mensagem": resultado['mensagem'],
-            "usuario": resultado['usuario'],
-            "token": resultado['token']
+            "usuario": resultado['usuario']
         }), 200)

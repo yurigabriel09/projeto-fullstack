@@ -5,8 +5,8 @@ class User(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     senha = db.Column(db.String(100), nullable=False)
-    cnpj = db.Column(db.Integer, nullable=False)
-    celular = db.Column(db.Integer, nullable=False)
+    cnpj = db.Column(db.String, nullable=False)
+    celular = db.Column(db.String, nullable=False)
     status = db.Column(db.Integer, nullable=False)
     codigo = db.Column(db.Integer, nullable=False)
 
