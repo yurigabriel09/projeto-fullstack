@@ -13,9 +13,6 @@ class UserService:
     def create_user(nome, email, senha, cnpj, celular, codigo):
         user = User(nome=nome, email=email, senha=senha, cnpj=cnpj, celular=celular, status=0, codigo=codigo)
 
-        for key, value in user.__dict__.items():
-            print(key, value)
-
         db.session.add(user)
         db.session.commit()   
 
@@ -101,6 +98,7 @@ class UserService:
         token = jwt.encode(
                 {
                     "id": user.id,
+                    "nome": user.nome,
                     "email": user.email,
                     "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
                 },

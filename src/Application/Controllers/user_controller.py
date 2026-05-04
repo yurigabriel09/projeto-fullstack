@@ -18,14 +18,14 @@ class UserController:
         codigo = UserController.create_code()
 
         if not nome or not email or not senha:
-            return make_response(jsonify({"erro": "Missing required fields"}), 400)
+            return make_response(jsonify({"erro": "Um dos campos está faltando: nome, e-mail ou senha. Verifique e tente novamente."}), 400)
 
         user = UserService.create_user(nome, email, hash_senha, cnpj, celular, codigo)
 
         return make_response(jsonify({
             "mensagem": "User salvo com sucesso",
             "usuario": user
-        }), 200)
+        }), 201)
 
     
     def crypt_senha(senha):
