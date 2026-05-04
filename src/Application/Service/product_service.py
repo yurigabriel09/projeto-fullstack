@@ -37,3 +37,4 @@ class ProductService:
             "success": True,
             "dados": ProductDomain.to_dict_create(produto.nome, produto.marca, produto.preco, produto.quantidade, produto.foto, produto.data_cadastro, produto.status)
         }
+    
