@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import Api from "./pages/Api";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
+import Verify from "./pages/verify";
 import ProtectedRoute from "./ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -11,6 +12,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Api />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify" element={<Verify />} />
+
 
         <Route
           path="/dashboard"

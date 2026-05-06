@@ -1,4 +1,5 @@
-import { useEffect, useState, Link } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Api() {
   const [mensagem, setMensagem] = useState("");
@@ -10,10 +11,13 @@ export default function Api() {
   }, []);
 
   return (
-    <div>
-      <h1>Resposta da API</h1>
-      <p>{mensagem}</p>
-      <a href="/login">Ir para Login</a>
-    </div>
+  <div>
+    <h1>Resposta da API</h1>
+    <p>{mensagem}</p>
+
+    <Link to="/register">Ir para cadastrar</Link>
+    <br />
+    <Link to="/login">Ir para Login</Link>
+  </div>
   );
 }
