@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch("http://localhost:5000/seller/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, senha }),
       });
 
       const data = await res.json();
@@ -44,7 +44,7 @@ export default function Login() {
       <input
         type="password"
         placeholder="Senha"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => setSenha(e.target.value)}
       />
 
       <button onClick={handleLogin}>Entrar</button>

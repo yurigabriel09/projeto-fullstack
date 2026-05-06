@@ -31,6 +31,7 @@ export default function Register() {
       if (res.ok) {
         alert("Cadastro realizado! Verifique seu WhatsApp");
         localStorage.setItem("verify_email", email);
+        localStorage.setItem("verify_senha", senha);
 
         navigate("/verify");
       } else {

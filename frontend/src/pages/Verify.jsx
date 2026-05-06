@@ -2,17 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Verify() {
-  const [codigo, setCodigo] = useState("");
   const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [codigo, setCodigo] = useState("");
   const navigate = useNavigate();
-
-  // pega email salvo no cadastro
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("verify_email");
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
-  }, []);
 
   const handleVerify = async () => {
     try {
@@ -23,7 +16,8 @@ export default function Verify() {
         },
         body: JSON.stringify({
           email,
-          codigo,
+          senha,
+          codigo
         }),
       });
 
@@ -33,6 +27,7 @@ export default function Verify() {
         alert("Conta ativada com sucesso!");
 
         localStorage.removeItem("verify_email");
+        localStorage.removeItem("verify_senha");
 
         navigate("/login");
       } else {
@@ -49,9 +44,13 @@ export default function Verify() {
 
       <input
         placeholder="Email"
-        value={email}
-        disabled
+        onChange={(e) => setEmail(e.target.value)}
       />
+
+      <input 
+        placeholder="Senha"
+        onChange={(e) => setSenha(e.target.value)}
+        />
 
       <input
         placeholder="Código do WhatsApp"

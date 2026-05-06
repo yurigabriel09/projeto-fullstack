@@ -6,7 +6,8 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/protected", {
+    fetch("http://localhost:5000/product/register", {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
