@@ -8,6 +8,41 @@ import uuid
 
 class ProductService:
     @staticmethod
+    def get_products(user_id):
+
+        produtos = Product.query.filter_by(id_seller=user_id).all()
+
+        if not produtos:
+            return {
+                "success": False,
+                "erro": "Nenhum produto encontrado para este vendedor!",
+                "status_code": 404
+            }
+
+        return {
+            "success": True,
+            "dados": [produto.to_dict() for produto in produtos]
+        }
+    
+
+    @staticmethod
+    def get_product(product_id, user_id):
+
+        produto = Product.query.filter_by(id=product_id, id_seller=user_id).first()        
+
+        if not produto:
+            return {
+                "success": False,
+                "erro": "Nenhum produto encontrado! Verifique e tente novamente",
+                "status_code": 404
+            }
+
+        return {
+            "success": True,
+            "dados": produto.to_dict()
+        }
+
+    @staticmethod
     def create_product(user_id, user_nome, nome, marca, preco, quantidade, foto):
 
         extensoes_validas = ['jpg', 'jpeg', 'png', 'webp']
@@ -37,4 +72,81 @@ class ProductService:
             "success": True,
             "dados": ProductDomain.to_dict_create(produto.nome, produto.marca, produto.preco, produto.quantidade, produto.foto, produto.data_cadastro, produto.status)
         }
+
+
+    @staticmethod
+    def edit_product(product_id, user_id, user_nome, dados, foto):
+
+        produto = Product.query.filter_by(id=product_id).first()
+
+        if not produto:
+            return {
+                "success": False,
+                "erro": "Produto não encontrado! Verifique e tente novamente",
+                "status_code": 404
+            }
+
+        if foto:
+            extensoes_validas = ['jpg', 'jpeg', 'png', 'webp']
+            extensao = foto.filename.rsplit('.', 1)[-1].lower()
+
+            if not extensao in extensoes_validas:
+                return {
+                    "success": False,
+                    "erro": "Formato de imagem inválido. Use jpg, jpeg, png ou webp.",
+                    "status_code": 400
+                }
+            
+            user_nome = user_nome.replace(' ', '_').lower()
+            pasta_seller = os.path.join('imagens', f"{user_nome}_{user_id}")
+            os.makedirs(pasta_seller, exist_ok=True)
+
+            nome_arquivo = f"{uuid.uuid4().hex}.{extensao}"
+            caminho_foto = os.path.join(pasta_seller, nome_arquivo)
+            foto.save(caminho_foto)
+
+            produto.foto = caminho_foto
+
+            if os.path.exists(produto.foto):
+                os.remove(produto.foto)
+
+        for campo, valor in dados.items():
+            setattr(produto, campo, valor)
+
+        db.session.commit()
+
+        return {
+            "success": True,
+            "mensagem": "Produto alterado com sucesso!",
+            "produto": ProductDomain.to_dict_edit(produto.nome, produto.marca, produto.preco, produto.quantidade, produto.foto)
+        }
     
+
+    @staticmethod
+    def inactivate_product(product_id, user_id):
+
+        produto = Product.query.filter_by(id=product_id, id_seller=user_id).first()
+
+        if not produto:
+            return {
+                "success": False,
+                "erro": "Produto não encontrado! Verifique e tente novamente",
+                "status_code": 404
+            }
+        
+        if produto.status == 0:
+            return {
+                "success": False,
+                "erro": "Produto já está inativo!",
+                "status_code": 409
+            }
+        
+        produto.status = 0
+
+        db.session.commit()
+
+        return {
+            "success": True,
+            "mensagem": "Produto desativado com sucesso!",
+            "dados": produto.to_dict()
+        }

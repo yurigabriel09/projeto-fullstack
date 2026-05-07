@@ -52,8 +52,9 @@ class UserController:
             return make_response(jsonify({"erro": resultado["erro"]}), resultado["status_code"])
 
         return make_response(jsonify({
-            "mensagem": "Usuário ativado com sucesso",
-            "usuario": resultado["usuario"]
+            "mensagem": resultado["mensagem"],
+            "usuario": resultado["usuario"],
+            "token": resultado["token"]
         }), 200)
     
 

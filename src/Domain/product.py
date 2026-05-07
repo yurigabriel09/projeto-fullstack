@@ -20,3 +20,12 @@ class ProductDomain:
             "data_cadastro": data_cadastro,
             "status": status
         }
+    
+    def to_dict_edit(nome, marca, preco, quantidade, foto):
+        return {
+            "nome": nome,
+            "marca": marca,
+            "preco": preco,
+            "quantidade": quantidade,
+            "foto": foto
+        }

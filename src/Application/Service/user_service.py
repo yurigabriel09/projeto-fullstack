@@ -58,9 +58,23 @@ class UserService:
         user.status = 1
         db.session.commit()
 
+        SECRET_KEY = current_app.config["SECRET_KEY"]
+
+        token = jwt.encode(
+                {
+                    "id": user.id,
+                    "nome": user.nome,
+                    "email": user.email,
+                    "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+                },
+                SECRET_KEY,
+                algorithm="HS256"
+            )
+
         return {
             "success": True,
-            "mensagem": "Usuário ativado com sucesso",
+            "mensagem": "Usuário ativado com sucesso!",
+            "token": token,
             "usuario": UserDomain.to_dict_activate(user.nome, user.email, user.status)
         }
     
