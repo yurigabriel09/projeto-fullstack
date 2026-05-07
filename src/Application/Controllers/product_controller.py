@@ -52,7 +52,7 @@ class ProductController:
         except ValueError:
             return make_response(jsonify({"erro": "Preço e quantidade devem ser numéricos."}), 400)
 
-        if quantidade < 0 or preco < 0:
+        if quantidade < 0 or preco <= 0:
             return make_response(jsonify({"erro": "Preço e quantidade não podem ser negativos."}), 400)
 
         

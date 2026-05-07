@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from src.config.data_base import init_db
 from src.routes import init_routes
 import os
@@ -16,6 +16,12 @@ def create_app():
 
     init_db(app)
     init_routes(app)
+
+    # Serve a pasta /imagens da raiz do projeto
+    @app.route('/imagens/<path:filename>')
+    def serve_imagens(filename):
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'imagens'))
+        return send_from_directory(base_dir, filename)
 
     return app
 

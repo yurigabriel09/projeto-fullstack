@@ -33,30 +33,34 @@ def init_routes(app):
 
     #### ROTAS DE PRODUTO ####
 
-    @app.route('/product/list', methods=['GET'])
+    @app.route('/seller/products/list', methods=['GET'])
     @token_required
     def get_products():
         return ProductController.get_products()
 
-    @app.route('/product/list/<int:id>', methods=['GET'])
+    @app.route('/seller/product/list/<int:id>', methods=['GET'])
     @token_required
     def get_product(id):
         return ProductController.get_product(id)
 
-    @app.route('/product/register', methods=['POST'])
+    @app.route('/seller/product/register', methods=['POST'])
     @token_required
     def register_product():
         return ProductController.register_product()
     
-    @app.route('/product/edit/<int:id>', methods=['PUT'])
+    @app.route('/seller/product/edit/<int:id>', methods=['PUT'])
     @token_required
     def edit_product(id):
         return ProductController.edit_product(id)
     
-    @app.route('/product/inactivate/<int:id>', methods=['PUT'])
+    @app.route('/seller/product/inactivate/<int:id>', methods=['PUT'])
     @token_required
     def inactivate_product(id):
         return ProductController.inactivate_product(id)
     
+    @app.route('/seller/product/delete/<int:id>', methods=['PUT'])
+    @token_required
+    def delete_product(id):
+        return ProductController.delete_product(id)
 
     #### ROTAS DE PRODUTO ####
