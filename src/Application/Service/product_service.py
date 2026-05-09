@@ -5,7 +5,6 @@ import os
 import uuid
 
 
-
 class ProductService:
     @staticmethod
     def get_products(user_id):

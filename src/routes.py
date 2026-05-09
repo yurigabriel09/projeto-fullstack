@@ -1,5 +1,6 @@
 from src.Application.Controllers.user_controller import UserController
 from src.Application.Controllers.product_controller import ProductController
+from src.Application.Controllers.sales_controller import SalesController
 from src.Infrastructure.Middleware.middleware import token_required
 from flask import jsonify, make_response
 
@@ -63,4 +64,9 @@ def init_routes(app):
     def delete_product(id):
         return ProductController.delete_product(id)
 
-    #### ROTAS DE PRODUTO ####
+    #### ROTAS DE VENDAS ####
+
+    @app.route('/seller/sales/list', methods=["GET"])
+    @token_required
+    def get_sales():
+        return SalesController.get_sales()
