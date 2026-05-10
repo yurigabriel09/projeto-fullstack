@@ -22,9 +22,12 @@ class UserController:
 
         user = UserService.create_user(nome, email, hash_senha, cnpj, celular, codigo)
 
+        if not user["success"]:
+            return make_response(jsonify({"erro": user["erro"]}), user["status_code"])
+
         return make_response(jsonify({
             "mensagem": "User salvo com sucesso",
-            "usuario": user
+            "usuario": user["dados"]
         }), 201)
 
     

@@ -11,6 +11,15 @@ import datetime
 class UserService:
     @staticmethod
     def create_user(nome, email, senha, cnpj, celular, codigo):
+
+        verify_user = User.query.filter_by(email=email).first()
+        if verify_user:
+            return {
+                "success": False,
+                "erro": "Usuário já foi cadastrado!",
+                "status_code": 409
+            }
+        
         user = User(nome=nome, email=email, senha=senha, cnpj=cnpj, celular=celular, status=0, codigo=codigo)
 
         db.session.add(user)
@@ -18,8 +27,10 @@ class UserService:
 
         Twilio.send_code(codigo)
 
-        return UserDomain.to_dict_create(user.nome, user.email, user.cnpj, user.celular, user.status, user.codigo)
-
+        return {
+            "success": True,
+            "dados": UserDomain.to_dict_create(user.nome, user.email, user.cnpj, user.celular, user.status, user.codigo)
+        }
 
     @staticmethod
     def activate_user(email, senha, codigo):
@@ -62,7 +73,7 @@ class UserService:
 
         token = jwt.encode(
                 {
-                    "id": user.id,
+                    "id": user.id_user,
                     "nome": user.nome,
                     "email": user.email,
                     "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
@@ -111,7 +122,7 @@ class UserService:
 
         token = jwt.encode(
                 {
-                    "id": user.id,
+                    "id": user.id_user,
                     "nome": user.nome,
                     "email": user.email,
                     "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
@@ -131,7 +142,7 @@ class UserService:
     @staticmethod
     def edit_seller(id, dados):
 
-        user = User.query.filter_by(id=id).first()
+        user = User.query.filter_by(id_user=id).first()
 
         if not user:
             return {

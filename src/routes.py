@@ -59,7 +59,7 @@ def init_routes(app):
     def inactivate_product(id):
         return ProductController.inactivate_product(id)
     
-    @app.route('/seller/product/delete/<int:id>', methods=['PUT'])
+    @app.route('/seller/product/delete/<int:id>', methods=['DELETE'])
     @token_required
     def delete_product(id):
         return ProductController.delete_product(id)

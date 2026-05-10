@@ -27,7 +27,7 @@ class ProductService:
     @staticmethod
     def get_product(product_id, user_id):
 
-        produto = Product.query.filter_by(id=product_id, id_seller=user_id).first()        
+        produto = Product.query.filter_by(id_product=product_id, id_seller=user_id).first()        
 
         if not produto:
             return {
@@ -42,7 +42,7 @@ class ProductService:
         }
 
     @staticmethod
-    def create_product(user_id, user_nome, nome, marca, preco, quantidade, foto):
+    def create_product(user_id, user_nome, nome, marca, preco, quantidade, categoria, descricao, foto):
 
         extensoes_validas = ['jpg', 'jpeg', 'png', 'webp']
         extensao = foto.filename.rsplit('.', 1)[-1].lower()
@@ -62,21 +62,21 @@ class ProductService:
         caminho_foto = os.path.join(pasta_seller, nome_arquivo)
         foto.save(caminho_foto)
 
-        produto = Product(id_seller=user_id, nome=nome, marca=marca, preco=preco, quantidade=quantidade, foto=caminho_foto, status=1)
+        produto = Product(id_seller=user_id, nome=nome, marca=marca, preco=preco, quantidade=quantidade, categoria=categoria, descricao=descricao, foto=caminho_foto, status=1)
 
         db.session.add(produto)
         db.session.commit()
 
         return {
             "success": True,
-            "dados": ProductDomain.to_dict_create(produto.nome, produto.marca, produto.preco, produto.quantidade, produto.foto, produto.data_cadastro, produto.status)
+            "dados": ProductDomain.to_dict_create(produto.nome, produto.marca, produto.preco, produto.quantidade, produto.categoria, produto.descricao, produto.foto, produto.data_cadastro, produto.status)
         }
 
 
     @staticmethod
     def edit_product(product_id, user_id, user_nome, dados, foto):
 
-        produto = Product.query.filter_by(id=product_id).first()
+        produto = Product.query.filter_by(id_product=product_id).first()
 
         if not produto:
             return {
@@ -124,7 +124,7 @@ class ProductService:
     @staticmethod
     def inactivate_product(product_id, user_id):
 
-        produto = Product.query.filter_by(id=product_id, id_seller=user_id).first()
+        produto = Product.query.filter_by(id_product=product_id, id_seller=user_id).first()
 
         if not produto:
             return {
@@ -147,5 +147,27 @@ class ProductService:
         return {
             "success": True,
             "mensagem": "Produto desativado com sucesso!",
+            "dados": produto.to_dict()
+        }
+    
+
+    @staticmethod
+    def delete_product(product_id, user_id):
+        
+        produto = Product.query.filter_by(id_product=product_id, id_seller=user_id).first()
+
+        if not produto:
+            return {
+                "success": False,
+                "erro": "Produto não encontrado!",
+                "status_code": 404
+            }
+        
+        db.session.delete(produto)
+        db.session.commit()
+
+        return {
+            "success": True,
+            "mensagem": "Produto deletado com sucesso!",
             "dados": produto.to_dict()
         }

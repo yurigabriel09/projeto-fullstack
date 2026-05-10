@@ -41,9 +41,11 @@ class ProductController:
         marca = request.form.get('marca')
         preco = request.form.get('preco')
         quantidade = request.form.get('quantidade')
+        categoria = request.form.get('categoria')
+        descricao = request.form.get('descricao')
         foto = request.files.get('foto')
 
-        if not nome or not marca or not preco or not quantidade or not foto:
+        if not nome or not marca or not preco or not quantidade or not categoria or not foto:
             return make_response(jsonify({"erro": "Um dos campos está faltando: nome, marca, preco, quantidade ou foto. Verifique e tente novamente."}), 400)
         
         try:
@@ -56,7 +58,7 @@ class ProductController:
             return make_response(jsonify({"erro": "Preço e quantidade não podem ser negativos."}), 400)
 
         
-        produto = ProductService.create_product(user_id, user_nome, nome, marca, preco, quantidade, foto)
+        produto = ProductService.create_product(user_id, user_nome, nome, marca, preco, quantidade, categoria, descricao, foto)
 
         if not produto["success"]:
             return make_response(jsonify({"erro": produto["erro"]}), produto["status_code"])
@@ -75,7 +77,7 @@ class ProductController:
 
         foto = request.files.get('foto')
 
-        campos_editaveis = {"nome", "marca", "preco", "quantidade"}
+        campos_editaveis = {"nome", "marca", "preco", "quantidade", "categoria", "descricao"}
 
         dados_filtrados = {key: value for key, value in request.form.items() if key in campos_editaveis}
 
@@ -99,6 +101,22 @@ class ProductController:
         user_id = request.user['id']
 
         produto = ProductService.inactivate_product(product_id, user_id)
+
+        if not produto["success"]:
+            return make_response(jsonify({"erro": produto["erro"]}), produto["status_code"])
+        
+        return make_response(jsonify({
+            "mensagem": produto["mensagem"],
+            "produto": produto["dados"]
+        }), 200)
+    
+
+    @staticmethod
+    def delete_product(product_id):
+
+        user_id = request.user['id']
+
+        produto = ProductService.delete_product(product_id, user_id)
 
         if not produto["success"]:
             return make_response(jsonify({"erro": produto["erro"]}), produto["status_code"])

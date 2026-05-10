@@ -10,12 +10,14 @@ class ProductDomain:
         self.data_cadastro = data_cadastro
         self.status = status
 
-    def to_dict_create(nome, marca, preco, quantidade, foto, data_cadastro, status):
+    def to_dict_create(nome, marca, preco, quantidade, categoria, descricao, foto, data_cadastro, status):
         return {
             "nome": nome,
             "marca": marca,
             "preco": preco,
             "quantidade": quantidade,
+            "categoria": categoria,
+            "descricao": descricao,
             "foto": foto,
             "data_cadastro": data_cadastro,
             "status": status

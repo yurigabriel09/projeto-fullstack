@@ -90,7 +90,7 @@ export default function SellerProducts() {
     if (!confirm("Tem certeza que deseja excluir este produto?")) return;
     setDeletingId(id);
     try {
-      const res = await fetch(`http://localhost:5000/seller/products/${id}`, {
+      const res = await fetch(`http://localhost:5000/seller/product/delete/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
