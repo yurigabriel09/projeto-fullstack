@@ -22,6 +22,8 @@ class Product(db.Model):
             "marca": self.marca,
             "preco": self.preco,
             "quantidade": self.quantidade,
+            "categoria": self.categoria,
+            "descricao": self.descricao,
             "foto": self.foto,
             "data_cadastro": self.data_cadastro,
             "status": self.status

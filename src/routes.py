@@ -70,3 +70,8 @@ def init_routes(app):
     @token_required
     def get_sales():
         return SalesController.get_sales()
+    
+    @app.route('/seller/sales/register', methods=["POST"])
+    @token_required
+    def register_sale():
+        return SalesController.register_sale()

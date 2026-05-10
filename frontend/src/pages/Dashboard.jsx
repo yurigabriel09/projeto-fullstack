@@ -96,13 +96,13 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const [resSales, resProducts] = await Promise.all([
-        fetch("http://localhost:5000/seller/sales",    { headers: { Authorization: `Bearer ${token}` } }),
-        fetch("http://localhost:5000/seller/products", { headers: { Authorization: `Bearer ${token}` } }),
+        fetch("http://localhost:5000/seller/sales/list",    { headers: { Authorization: `Bearer ${token}` } }),
+        fetch("http://localhost:5000/seller/products/list", { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       if (resSales.status === 401 || resProducts.status === 401) { navigate("/login"); return; }
       const [salesData, productsData] = await Promise.all([resSales.json(), resProducts.json()]);
-      setSales(salesData);
-      setProducts(productsData);
+      setSales(salesData.vendas ?? []);
+      setProducts(productsData.produtos ?? []);
     } catch {
       // silently fail — cards mostrarão zero
     } finally {

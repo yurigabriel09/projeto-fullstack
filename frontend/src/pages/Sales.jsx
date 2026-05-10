@@ -72,12 +72,12 @@ function SalesList({ token, navigate, onAddSale }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:5000/seller/sales", {
+      const res = await fetch("http://localhost:5000/seller/sales/list", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 401) { navigate("/login"); return; }
       const data = await res.json();
-      setSales(data);
+      setSales(data.vendas ?? []);
     } catch {
       setError("Não foi possível carregar suas vendas.");
     } finally {
@@ -162,7 +162,7 @@ function SalesList({ token, navigate, onAddSale }) {
                   <td className="px-4 py-3 text-zinc-300 text-right">{s.quantidade}</td>
                   <td className="px-4 py-3 text-zinc-300 text-right">{fmt(s.preco_unitario)}</td>
                   <td className="px-4 py-3 text-white font-semibold text-right">{fmt(Number(s.preco_unitario) * Number(s.quantidade))}</td>
-                  <td className="px-4 py-3 text-zinc-500 text-right whitespace-nowrap hidden sm:table-cell">{s.created_at ? fmtD(s.created_at) : "—"}</td>
+                  <td className="px-4 py-3 text-zinc-500 text-right whitespace-nowrap hidden sm:table-cell">{s.data_venda ?? "—"}</td>
                 </tr>
               ))}
             </tbody>
@@ -185,12 +185,15 @@ function AddSaleForm({ token, navigate, onBack, onSuccess }) {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/seller/products", {
+      const res = await fetch("http://localhost:5000/seller/products/list", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 401) { navigate("/login"); return; }
       const data = await res.json();
-      setProducts(data.filter((p) => p.status !== "Inativo" && p.quantidade > 0));
+      // ← troca essa linha:
+      // setProducts(data.filter((p) => p.status !== "Inativo" && p.quantidade > 0));
+      // por essa:
+      setProducts((data.produtos ?? []).filter((p) => p.status !== "Inativo" && p.quantidade > 0));
     } catch {
       alert("Erro ao carregar produtos.");
     } finally {
@@ -221,7 +224,7 @@ function AddSaleForm({ token, navigate, onBack, onSuccess }) {
     if (!validar()) return;
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/seller/sales", {
+      const res = await fetch("http://localhost:5000/seller/sales/register", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ produto_id: Number(form.produto_id), quantidade: Number(form.quantidade) }),
