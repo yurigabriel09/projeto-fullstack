@@ -1,6 +1,9 @@
 from src.Domain.sales import SalesDomain
+from src.Domain.product import ProductDomain
+from src.Domain.user import UserDomain
 from src.Infrastructure.Model.sales import Sales
 from src.Infrastructure.Model.product import Product
+from src.Infrastructure.Model.user import User
 from src.config.data_base import db
 
 
@@ -47,20 +50,22 @@ class SalesService:
                 "erro": "Produto não encontrado!",
                 "status_code": 404
             }
+        
+        user = User.query.filter_by(id_user=user_id).first()
 
-        if produto.status != 1:
+        if not user:
             return {
                 "success": False,
-                "erro": "Produto não está ativo!",
-                "status_code": 400
+                "erro": "Seller não encontrado!",
+                "status_code": 404
             }
 
-        if quantidade > produto.quantidade:
-            return {
-                "success": False,
-                "erro": "Quantidade maior que o estoque disponível! Verifique e tente novamente.",
-                "status_code": 400
-            }
+        try:
+            ProductDomain.pode_vender(produto.status, quantidade, produto.quantidade)
+            UserDomain.pode_vender(user.status)
+        except ValueError as e:
+            return {"success": False, "erro": str(e), "status_code": 400}
+        
         valor_venda = quantidade * produto.preco
 
         produto.quantidade -= quantidade

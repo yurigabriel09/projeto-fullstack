@@ -76,7 +76,7 @@ class ProductService:
     @staticmethod
     def edit_product(product_id, user_id, user_nome, dados, foto):
 
-        produto = Product.query.filter_by(id_product=product_id).first()
+        produto = Product.query.filter_by(id_product=product_id, id_seller=user_id).first()
 
         if not produto:
             return {

@@ -34,3 +34,9 @@ class UserDomain:
             "nome": nome,
             "email": email
         }
+    
+
+    @staticmethod
+    def pode_vender(status):
+        if status != 1:
+            raise ValueError("Seller inativo não pode realizar vendas.")

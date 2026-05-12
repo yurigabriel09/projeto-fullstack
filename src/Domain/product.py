@@ -31,3 +31,10 @@ class ProductDomain:
             "quantidade": quantidade,
             "foto": foto
         }
+    
+    @staticmethod
+    def pode_vender(status, quantidade_pedida, quantidade_estoque):
+        if status != 1:
+            raise ValueError("Produto inativo não pode ser vendido.")
+        if quantidade_pedida > quantidade_estoque:
+            raise ValueError("Quantidade pedida maior que o estoque disponível.")
