@@ -96,18 +96,21 @@ class ProductService:
                     "status_code": 400
                 }
             
+            caminho_antigo = produto.foto
+
             user_nome = user_nome.replace(' ', '_').lower()
             pasta_seller = os.path.join('imagens', f"{user_nome}_{user_id}")
             os.makedirs(pasta_seller, exist_ok=True)
 
             nome_arquivo = f"{uuid.uuid4().hex}.{extensao}"
             caminho_foto = os.path.join(pasta_seller, nome_arquivo)
-            foto.save(caminho_foto)
+            caminho_foto = caminho_foto.replace('\\', '/')
 
+            foto.save(caminho_foto)
             produto.foto = caminho_foto
 
-            if os.path.exists(produto.foto):
-                os.remove(produto.foto)
+            if caminho_antigo and os.path.exists(caminho_antigo):
+                os.remove(caminho_antigo)
 
         for campo, valor in dados.items():
             setattr(produto, campo, valor)

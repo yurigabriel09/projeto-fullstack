@@ -2,7 +2,7 @@ from src.Application.Controllers.user_controller import UserController
 from src.Application.Controllers.product_controller import ProductController
 from src.Application.Controllers.sales_controller import SalesController
 from src.Infrastructure.Middleware.middleware import token_required
-from flask import jsonify, make_response
+from flask import jsonify, make_response, send_from_directory
 
 def init_routes(app):    
     @app.route('/api', methods=['GET'])
@@ -10,6 +10,10 @@ def init_routes(app):
         return make_response(jsonify({
             "mensagem": "API - OK; Docker - Up",
         }), 200)
+    
+    @app.route('/imagens/<path:filename>')
+    def serve_image(filename):
+        return send_from_directory('imagens', filename)
     
     
     #### ROTAS DE SELLER ####

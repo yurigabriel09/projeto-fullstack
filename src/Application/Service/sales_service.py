@@ -25,7 +25,7 @@ class SalesService:
                 "produto_nome": produto.nome if produto else None,
                 "produto_id": venda.id_produto,
                 "quantidade": venda.quantidade,
-                "preco_unitario": produto.preco if produto else None,
+                "preco_unitario": venda.preco_unitario,
                 "valor": venda.valor,
                 "data_venda": venda.data_venda.strftime("%d/%m/%Y %H:%M") if venda.data_venda else None
             })
@@ -65,7 +65,7 @@ class SalesService:
 
         produto.quantidade -= quantidade
         
-        venda = Sales(id_seller=user_id, id_produto=product_id, quantidade=quantidade, valor=valor_venda)
+        venda = Sales(id_seller=user_id, id_produto=product_id, quantidade=quantidade, preco_unitario=produto.preco, valor=valor_venda)
 
         db.session.add(venda)
         db.session.commit()
