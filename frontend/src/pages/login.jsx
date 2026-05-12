@@ -38,7 +38,7 @@ export default function Login() {
         alert("Conta não ativada. Verifique seu WhatsApp.");
         navigate("/verify");
       } else {
-        alert(data.message || "Erro no login");
+        alert(data.erro || data.mensagem || "Erro no login");
       }
     } catch (err) {
       console.error("Erro de conexão:", err);

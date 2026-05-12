@@ -78,7 +78,7 @@ export default function Register() {
         alert("Cadastro realizado! Verifique seu WhatsApp");
         navigate("/verify");
       } else {
-        alert(data.message || "Erro no cadastro");
+        alert(data.erro || data.mensagem || "Erro no cadastro");
       }
     } catch (err) {
       console.error("Erro de conexão:", err);

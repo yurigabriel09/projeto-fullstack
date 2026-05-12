@@ -115,7 +115,7 @@ export default function AddProduct() {
         alert(isEdit ? "Produto atualizado!" : "Produto cadastrado!");
         navigate("/seller/products");
       } else {
-        alert(data.message || "Erro ao salvar produto.");
+        alert(data.erro || data.mensagem || "Erro ao salvar produto.");
       }
     } catch {
       alert("Erro de conexão.");
@@ -123,6 +123,28 @@ export default function AddProduct() {
       setLoading(false);
     }
   };
+
+  const handleInativar = async () => {
+  if (!confirm("Tem certeza que deseja inativar este produto?")) return;
+  setLoading(true);
+  try {
+    const res = await fetch(`http://localhost:5000/seller/product/inactivate/${id}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      alert("Produto inativado com sucesso!");
+      navigate("/seller/products");
+    } else {
+      const data = await res.json();
+      alert(data.erro || data.mensagem || "Erro ao inativar produto.");
+    }
+  } catch {
+    alert("Erro de conexão.");
+  } finally {
+    setLoading(false);
+  }
+  };  
 
   if (loadingData) {
     return (
@@ -262,17 +284,28 @@ export default function AddProduct() {
             />
           </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full h-11 bg-white text-zinc-950 font-semibold rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Salvando...</>
-            ) : (
-              isEdit ? "Salvar alterações" : "Cadastrar produto"
-            )}
-          </button>
+          
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full h-11 bg-white text-zinc-950 font-semibold rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> Salvando...</>
+              ) : (
+                isEdit ? "Salvar alterações" : "Cadastrar produto"
+              )}
+              </button>
+              {isEdit && (
+                <button
+                  onClick={handleInativar}
+                  disabled={loading}
+                  className="w-full h-11 border border-red-900/40 text-red-400 font-semibold rounded-lg hover:bg-red-900/20 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  Inativar produto
+                </button>
+              )}
+
         </div>
       </main>
     </div>

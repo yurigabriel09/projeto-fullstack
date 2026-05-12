@@ -231,7 +231,7 @@ function AddSaleForm({ token, navigate, onBack, onSuccess }) {
       });
       const data = await res.json();
       if (res.ok) { alert("Venda registrada com sucesso!"); onSuccess(); }
-      else alert(data.message || "Erro ao registrar venda.");
+      else alert(data.erro || data.mensagem || "Erro ao registrar venda.");
     } catch {
       alert("Erro de conexão.");
     } finally {

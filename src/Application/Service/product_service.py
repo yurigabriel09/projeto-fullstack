@@ -1,5 +1,6 @@
 from src.Domain.product import ProductDomain
 from src.Infrastructure.Model.product import Product
+from src.Infrastructure.Model.sales import Sales
 from src.config.data_base import db
 import os
 import uuid
@@ -136,12 +137,10 @@ class ProductService:
                 "status_code": 404
             }
         
-        if produto.status == 0:
-            return {
-                "success": False,
-                "erro": "Produto já está inativo!",
-                "status_code": 409
-            }
+        try:
+            ProductDomain.pode_inativar(produto.status)
+        except ValueError as e:
+            return {"success": False, "erro": str(e), "status_code": 400}
         
         produto.status = 0
 
@@ -164,6 +163,15 @@ class ProductService:
                 "success": False,
                 "erro": "Produto não encontrado!",
                 "status_code": 404
+            }
+        
+        vendas = Sales.query.filter_by(id_produto=product_id, id_seller=user_id).all()
+
+        if vendas:
+            return {
+                "success": False,
+                "erro": "Não é possível deletar um produto que possui vendas registradas.",
+                "status_code": 409
             }
         
         db.session.delete(produto)

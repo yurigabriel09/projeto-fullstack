@@ -196,7 +196,7 @@ export default function SellerProducts() {
                   </div>
 
                   {p.status === 0 && (
-                    <div className="absolute top-3 left-3 bg-zinc-950/80 text-zinc-400 text-xs px-2 py-0.5 rounded-full">
+                    <div className="absolute top-3 left-3 bg-red-900/80 text-red-400 text-xs px-2 py-0.5 rounded-full">
                       Inativo
                     </div>
                   )}

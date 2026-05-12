@@ -40,7 +40,7 @@ export default function Verify() {
         localStorage.setItem("token", data.token);
         navigate("/seller/products");
       } else {
-        alert(data.message || "Código inválido");
+        alert(data.erro || data.mensagem || "Código inválido");
       }
     } catch (err) {
       console.error("Erro de conexão:", err);
